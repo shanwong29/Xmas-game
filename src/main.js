@@ -9,7 +9,6 @@ function preload() {
 
 function setup() {
   createCanvas(1000, 600);
-  song.loop();
 
   mode = 0;
 }
@@ -39,9 +38,14 @@ function draw() {
   }
 }
 
+function startMusic() {
+  song.loop();
+}
+
 function keyPressed() {
   if (keyCode === ENTER) {
     mode = 1;
+    startMusic();
   }
 
   console.log("KeyPressed function called");
