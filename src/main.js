@@ -59,6 +59,7 @@ function keyPressed() {
 function mouseClicked() {
   if (clickOnButton()) {
     mode = 0;
+    song.stop();
     console.log("mode 0");
   }
 }
