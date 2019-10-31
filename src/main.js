@@ -1,16 +1,16 @@
 const game = new Game();
 let mode;
-let song;
+var song;
 function preload() {
   console.log("main preloaded");
   game.preload();
-  // song = loadSound("assets/Minecraft Soundtrack - Calm 3.webm");
+  song = loadSound("assets/Minecraft Soundtrack - Calm 3.webm");
 }
 
 function setup() {
   createCanvas(1000, 600);
+  song.loop();
   mode = 0;
-  // song.play();
 }
 
 function reset() {

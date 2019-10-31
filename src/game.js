@@ -194,7 +194,7 @@ class Game {
   //check if there are more than 20 coins when spacebar is pressed
   giftDeliver() {
     console.log("giftDevliver");
-    if (this.coinCounter >= 20) {
+    if (this.coinCounter >= 20 && this.gift1.distanceGift == 0) {
       console.log("this drop is true");
       this.drop = true;
       this.coinCounter -= 20;
