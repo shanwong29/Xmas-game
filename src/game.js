@@ -102,7 +102,7 @@ class Game {
     textFont(this.EightBitFont);
     textSize(26);
     stroke(255, 255, 255);
-    text("Coins : " + this.coinCounter, width - 172, 35);
+    text("Coins : " + this.coinCounter + " / 20", width - 192, 35);
     text("Mission : " + this.mission, width - 180, 60);
     pop();
 
