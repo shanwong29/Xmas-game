@@ -1,6 +1,6 @@
 const game = new Game();
 let mode;
-var song;
+let song;
 function preload() {
   console.log("main preloaded");
   game.preload();
@@ -10,6 +10,7 @@ function preload() {
 function setup() {
   createCanvas(1000, 600);
   song.loop();
+
   mode = 0;
 }
 
