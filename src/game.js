@@ -11,6 +11,8 @@ class Game {
     this.coinCounter = 0;
     this.totalCoinsCollected = 0;
     this.mission = 0;
+    this.coinDisplay = 0;
+    this.coinDisplayRun = true;
   }
 
   preload() {
@@ -62,8 +64,10 @@ class Game {
     }
     this.coinArr.forEach((currentCoin, index) => {
       currentCoin.draw();
-      if (this.coinRandomX < -this.coinWidth) {
+      if (currentCoin.x + currentCoin.width < 0) {
+        console.log("coin gone");
         this.coinArr.splice(index, 1);
+        console.log("coinArr", this.coinArr.length);
       }
 
       //when collision between coins & santa is detected
@@ -76,13 +80,18 @@ class Game {
     });
 
     //generating & drawing birds(obstacle), and eliminating birds when it s outside the screen
+
     if (frameCount >= 60 && frameCount % 150 == 0) {
       this.birdArr.push(new Bird());
     }
+
     this.birdArr.forEach((currentBird, index) => {
       currentBird.draw();
-      if (this.birdRandomX < -this.birdWidth) {
+      // if (currentBird.x < -currentBird.width) {
+      if (currentBird.x + currentBird.width < 0) {
+        console.log("bird gone");
         this.birdArr.splice(index, 1);
+        console.log("BirdArr", this.birdArr.length);
       }
 
       //when collision between coins & santa is detected
@@ -123,13 +132,17 @@ class Game {
     }
   }
 
+  getTotalCoinsCollected() {
+    return this.totalCoinsCollected;
+  }
+
   //collision condition between coins & santa
   isCollision(coins, santa) {
     if (
-      coins.coinRandomX < santaX + santa.santaWidth &&
-      coins.coinRandomX + coins.coinWidth > santaX &&
-      coins.coinRandomY < santaY + santa.santaHeight &&
-      coins.coinRandomY + coins.coinHeight > santaY
+      coins.x < santaX + santa.santaWidth &&
+      coins.x + coins.width > santaX &&
+      coins.y < santaY + santa.santaHeight &&
+      coins.y + coins.height > santaY
     ) {
       return true;
     }
@@ -138,14 +151,10 @@ class Game {
   //collision condition between birds & deer
   isCollisionBird(birdsInstance, deerInstance) {
     if (
-      birdsInstance.birdRandomX <
-        deerInstance.deerX - 7 + deerInstance.deerWidth &&
-      birdsInstance.birdRandomX + birdsInstance.birdWidth >
-        deerInstance.deerX + 27 &&
-      birdsInstance.birdRandomY <
-        deerInstance.deerY - 35 + deerInstance.deerHeight &&
-      birdsInstance.birdRandomY + birdsInstance.birdHeight >
-        deerInstance.deerY + 15
+      birdsInstance.x < deerInstance.deerX - 7 + deerInstance.deerWidth &&
+      birdsInstance.x + birdsInstance.width > deerInstance.deerX + 27 &&
+      birdsInstance.y < deerInstance.deerY - 35 + deerInstance.deerHeight &&
+      birdsInstance.y + birdsInstance.height > deerInstance.deerY + 15
     ) {
       return true;
     }
@@ -167,9 +176,55 @@ class Game {
     pop();
   }
 
+  displayIncrement() {
+    this.coinDisplay++;
+    console.log("abc", this.coinDisplay);
+
+    if (this.coinDisplay === this.getTotalCoinsCollected()) {
+      console.log("inside");
+      console.log("function ", this.getTotalCoinsCollected());
+      console.log("coin Disply", this.coinDisplay);
+      clearInterval(this.coinsID);
+      this.coinDisplayRun = false;
+      this.coinsID = null;
+      // this.coinDisplay = this.getTotalCoinsCollected();
+    }
+  }
+
   //inside game over scene - final result text & start again button
   displayFinalResult() {
-    let result = `Wow!  You have collected  ${this.totalCoinsCollected}  coins.\nYou have completed  ${this.mission}  missions.`;
+    if (this.coinDisplayRun == true && !this.coinsID) {
+      this.coinsID = setInterval(() => this.displayIncrement(), 100);
+    }
+
+    // console.log(this.coinDisplay);
+    // if (this.coinDisplayRun) {
+    //   console.log(this.coinDisplayRun);
+    //   this.displayRun();
+    // }
+    // var _this = this;
+    // var coinsID = setInterval(function() {
+    //   _this.coinDisplay++;
+    //   console.log("diplay" + _this.coinDisplay);
+    //   console.log("the number" + _this.getTotalCoinsCollected());
+    //   if (_this.coinDisplay >= _this.getTotalCoinsCollected()) {
+    //     console.log("nside");
+    //     clearInterval(coinsID);
+    //   }
+    // }, 500);
+
+    // const coinsID = setInterval(() => {
+    //   this.coinDisplay++;
+    //   if (this.coinDisplay == this.getTotalCoinsCollected()) {
+    //     console.log("inside");
+    //     console.log("function " + this.getTotalCoinsCollected());
+    //     console.log("coin Disply" + this.coinDisplay);
+    //     clearInterval(coinsID);
+    //   }
+    //   // this.coinDisplay = this.getTotalCoinsCollected();
+    // }, 1000);
+
+    let result = `Wow!  You have collected  ${this.coinDisplay}  coins.\nYou have completed  ${this.mission}  missions.`;
     fill(38, 43, 61);
 
     push();

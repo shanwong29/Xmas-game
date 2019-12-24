@@ -1,9 +1,11 @@
 class Bird {
   constructor() {
-    this.birdRandomX = Math.floor(Math.random() * (1000 - 96)) + width;
-    this.birdRandomY = Math.random() * (419 - 63);
-    this.birdWidth = 96;
-    this.birdHeight = 63;
+    this.width = 96;
+    this.height = 63;
+    this.yLimit = 419;
+    this.x =
+      Math.floor(Math.random() * (canvasWidth - this.width)) + canvasWidth;
+    this.y = Math.random() * (this.yLimit - this.height);
     this.birdImgArr = [];
     this.birdImgCounter = 0;
     this.birdImgArr.push(loadImage("assets/stork-flow(0)_236*145.png"));
@@ -21,14 +23,15 @@ class Bird {
     if (frameCount % 10 == 0) {
       this.birdImgCounter++;
     }
-    this.birdRandomX -= 2;
+
+    this.x -= 2;
 
     image(
       this.birdImgArr[this.birdImgCounter % this.birdImgArr.length],
-      this.birdRandomX,
-      this.birdRandomY,
-      this.birdWidth,
-      this.birdHeight
+      this.x,
+      this.y,
+      this.width,
+      this.height
     );
   }
 }

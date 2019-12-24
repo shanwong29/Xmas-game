@@ -1,9 +1,11 @@
 class Coin {
   constructor() {
-    this.coinRandomX = Math.floor(Math.random() * (1000 - 23)) + width;
-    this.coinRandomY = Math.floor(Math.random() * (405 - 23)); //y limit of coin = 382;
-    this.coinWidth = 23;
-    this.coinHeight = 23;
+    this.width = 23;
+    this.height = 23;
+    this.yLimit = 405;
+    this.x =
+      Math.floor(Math.random() * (canvasWidth - this.width)) + canvasWidth;
+    this.y = Math.floor(Math.random() * (this.yLimit - 23)); //y limit of coin = 382;
     this.coinFrames = [];
     this.coinImgCounter = 0;
 
@@ -26,12 +28,12 @@ class Coin {
 
     image(
       this.coinFrames[this.coinImgCounter % this.coinFrames.length],
-      this.coinRandomX,
-      this.coinRandomY,
-      this.coinWidth,
-      this.coinHeight
+      this.x,
+      this.y,
+      this.width,
+      this.height
     );
 
-    this.coinRandomX -= 1;
+    this.x -= 1;
   }
 }

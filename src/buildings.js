@@ -1,6 +1,8 @@
 class Buildings {
   constructor() {
-    this.xBkg = 0;
+    this.x = 0; //x-position of the image (left-top-coner)
+    this.y = 419; //y-position of the image (left-top-coner)
+    this.height = 181;
   }
 
   preload() {
@@ -9,11 +11,17 @@ class Buildings {
   }
 
   draw() {
-    image(this.buildings, this.xBkg, 419, width);
-    image(this.buildings, this.xBkg + width, 419, width);
-    this.xBkg -= 1.8;
-    if (this.xBkg <= -width) {
-      this.xBkg = 0;
+    image(this.buildings, this.x, this.y, canvasWidth, this.height);
+    image(
+      this.buildings,
+      this.x + canvasWidth,
+      this.y,
+      canvasWidth,
+      this.height
+    );
+    this.x -= 1.8;
+    if (this.x <= -canvasWidth) {
+      this.x = 0;
     }
   }
 }

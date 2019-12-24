@@ -1,6 +1,7 @@
 class Sky {
   constructor() {
-    this.xBkg = 0;
+    this.x = 0;
+    this.y = 0;
   }
 
   preload() {
@@ -10,11 +11,11 @@ class Sky {
 
   draw() {
     clear();
-    image(this.sky, this.xBkg, 0, width, height);
-    image(this.sky, this.xBkg + width, 0, width, height);
-    this.xBkg -= 1;
-    if (this.xBkg <= -width) {
-      this.xBkg = 0;
+    image(this.sky, this.x, this.y, canvasWidth, canvasHeight);
+    image(this.sky, this.x + canvasWidth, this.y, canvasWidth, canvasHeight);
+    this.x -= 1;
+    if (this.x <= -canvasWidth) {
+      this.x = 0;
     }
   }
 }
