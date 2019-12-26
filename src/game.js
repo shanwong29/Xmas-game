@@ -1,65 +1,50 @@
 class Game {
   constructor() {
-    console.log("Game Constructor");
     this.sky = new Sky();
     this.buildings = new Buildings();
     this.santaAndLeash = new SantaAndLeash();
     this.deer = new Deer();
-    this.scoreBox = new ScoreBox();
+    this.messages = new Messages();
     this.gift = new Gift();
+
     this.coinArr = [];
     this.birdArr = [];
+
     this.requiredCoinsForGiftDeliver = 20;
     this.coinCounter = 0;
     this.totalCoinsCollected = 0;
-    this.mission = 0;
     this.displayCoinNum = 0;
     this.coinIntervalCanRun = true;
 
-    this.restartBtnX = 400;
-    this.restartBtnY = 280;
-    this.restartBtnWidth = 200;
-    this.restartBtnHeight = 70;
+    this.totalMissionCompleted = 0;
+    this.displayMissionNum = 0;
+    this.missionIntervalCanRun = true;
   }
 
   preload() {
     console.log("game is preloaded");
-    this.EightBitFont = loadFont("assets/8_bit_madness/8-Bit Madness.ttf");
     this.sky.preload();
     this.buildings.preload();
     this.santaAndLeash.preload();
     this.deer.preload();
-    this.scoreBox.preload();
+    this.messages.preload();
     this.gift.preload();
   }
 
-  drawBkgAndCharacter() {
+  drawBkg() {
     this.sky.draw();
     this.buildings.draw();
+  }
+
+  drawCharacter() {
     this.deer.draw();
     this.santaAndLeash.draw();
   }
 
   drawStartPage() {
-    this.drawBkgAndCharacter();
-
-    // draw instruction
-    push();
-    fill(255, 255, 255, 200); //rect bkg-color : white with tranparency
-    stroke(0, 0, 0, 200); //rect border-color: black
-    strokeWeight(3);
-    rect(150, 100, 700, 300, 20);
-    pop();
-    push();
-    textFont(this.EightBitFont);
-    textAlign(CENTER, CENTER);
-    textSize(36);
-    stroke(255, 255, 255); //font-border : white
-    strokeWeight(3);
-    let instruction =
-      "Use the mouse to control the deer, avoid the birds and help Santa to collect coins. Whenever 20 coins are collected, press <SPACEBAR> to help Santa deliver gifts. Press <ENTER> to start.";
-    text(instruction, 180, 100, 640, 300);
-    pop();
+    this.drawBkg();
+    this.drawCharacter();
+    this.messages.drawInstruction();
   }
 
   /*****************************************************************************************/
@@ -67,14 +52,13 @@ class Game {
   //check if there are more than this.requiredCoinsForGiftDeliver when spacebar is pressed && if the gifts are at original position
   //function called by keypress 32, keyPress function in main.js
   giftDeliverCheck() {
-    console.log("giftDevliverCheck");
     if (
       this.coinCounter >= this.requiredCoinsForGiftDeliver &&
-      this.gift.distanceGift === 0
+      this.gift.giftDistance === 0
     ) {
       this.gift.canDeliverGift = true;
       this.coinCounter -= this.requiredCoinsForGiftDeliver;
-      this.mission += 1;
+      this.totalMissionCompleted += 1;
     }
   }
 
@@ -104,7 +88,14 @@ class Game {
 
   // draw game playing scene
   drawGamePlaying() {
-    this.drawBkgAndCharacter();
+    this.drawBkg();
+
+    // if game.canDeliverGift is true, draw gifts
+    if (this.gift.canDeliverGift === true) {
+      this.gift.draw();
+    }
+
+    this.drawCharacter();
 
     // generating coins
     if (frameCount >= 60 && frameCount % 30 === 0) {
@@ -149,78 +140,58 @@ class Game {
     });
 
     //drawing score box & text
-    this.scoreBox.draw();
-    push();
-    textFont(this.EightBitFont);
-    textSize(26);
-    stroke(255, 255, 255); //font-edge-color : white
-
-    text(
-      `Coins : ${this.coinCounter} / ${this.requiredCoinsForGiftDeliver}`,
-      canvasWidth - 192,
-      35
+    this.messages.drawScoreBox(
+      this.coinCounter,
+      this.requiredCoinsForGiftDeliver,
+      this.totalMissionCompleted
     );
-    text(`Mission : ${this.mission}`, canvasWidth - 180, 60);
-    pop();
-
-    // if game.canDeliverGift is true, draw gifts
-    if (this.gift.canDeliverGift === true) {
-      this.gift.draw();
-    }
   }
 
   /*************************************************************************************/
 
   //draw game over scene
   drawGameOver() {
-    this.drawBkgAndCharacter();
+    this.drawBkg();
+    this.drawCharacter();
     this.displayFinalResult();
   }
 
-  displayIncrement() {
+  coinNumIncrement() {
     if (this.totalCoinsCollected > 0) {
       this.displayCoinNum++;
     }
 
     if (this.displayCoinNum === this.totalCoinsCollected) {
-      console.log("final Display Coin Num", this.displayCoinNum);
       clearInterval(this.coinsID);
       this.coinIntervalCanRun = false;
       this.coinsID = null;
     }
   }
 
+  missionNumIncrement() {
+    if (this.totalMissionCompleted > 0) {
+      this.displayMissionNum++;
+    }
+    if (this.displayMissionNum === this.totalMissionCompleted) {
+      clearInterval(this.missionID);
+      this.missionIntervalCanRun = false;
+      this.missionID = null;
+    }
+  }
+
   //inside game over scene - final result text & start again button
   displayFinalResult() {
     if (this.coinIntervalCanRun == true && !this.coinsID) {
-      this.coinsID = setInterval(() => this.displayIncrement(), 100);
+      this.coinsID = setInterval(() => this.coinNumIncrement(), 100);
     }
 
-    let result = `Wow!  You have collected  ${this.displayCoinNum}  coins.\nYou have completed  ${this.mission}  missions.`;
+    if (this.missionIntervalCanRun == true && !this.missionID) {
+      this.missionID = setInterval(() => this.missionNumIncrement(), 100);
+    }
 
-    push();
-    textFont(this.EightBitFont);
-    textAlign(CENTER, CENTER);
-
-    fill(38, 43, 61); //font-color : navy-blue
-    stroke(183, 183, 183); //font-edge-color : light-gray
-    strokeWeight(3);
-    textSize(33);
-    text("Merry Christmas!!!", 350, 80, 300, 200);
-    textSize(22);
-    text(result, 300, 120, 400, 200);
-
-    fill(153, 255, 51); //restart button bkg-color : green
-    rect(
-      this.restartBtnX,
-      this.restartBtnY,
-      this.restartBtnWidth,
-      this.restartBtnHeight,
-      20
-    ); //restart button
-    fill(0, 0, 0); //restart font-color : black
-    textSize(33);
-    text("Start Again", 350, 280, 300, 70);
-    pop();
+    this.messages.drawGameResultAndRestartBtn(
+      this.displayCoinNum,
+      this.displayMissionNum
+    );
   }
 }

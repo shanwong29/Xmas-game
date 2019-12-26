@@ -1,5 +1,6 @@
 const game = new Game();
 
+// global variables
 let canvasWidth = 1000;
 let canvasHeight = 600;
 let mode;
@@ -10,7 +11,7 @@ let santaY = 0;
 function preload() {
   console.log("main preloaded");
   game.preload();
-  song = loadSound("assets/Minecraft Soundtrack - Calm 3.webm");
+  song = loadSound("assets/Minecraft_Soundtrack_Calm3.mp3");
 }
 
 function setup() {
@@ -19,17 +20,21 @@ function setup() {
 }
 
 function reset() {
-  game.giftArr = [];
   game.coinArr = [];
   game.birdArr = [];
-  game.coinCounter = 0;
-  game.totalCoinsCollected = 0;
-  game.gift.distanceGift = 0;
+
+  game.gift.giftDistance = 0;
   game.gift.fallingSpeed = 0;
   game.gift.velocity = 0;
-  game.mission = 0;
+
+  game.coinCounter = 0;
+  game.totalCoinsCollected = 0;
   game.displayCoinNum = 0;
   game.coinIntervalCanRun = true;
+
+  game.totalMissionCompleted = 0;
+  game.displayMissionNum = 0;
+  game.missionIntervalCanRun = true;
 }
 
 function draw() {
@@ -69,10 +74,10 @@ function mouseClicked() {
 
 function insideRestartButtonArea() {
   if (
-    mouseX > game.restartBtnX &&
-    mouseX < game.restartBtnX + game.restartBtnWidth &&
-    mouseY > game.restartBtnY &&
-    mouseY < game.restartBtnY + game.restartBtnHeight &&
+    mouseX > game.messages.restartBtnX &&
+    mouseX < game.messages.restartBtnX + game.messages.restartBtnWidth &&
+    mouseY > game.messages.restartBtnY &&
+    mouseY < game.messages.restartBtnY + game.messages.restartBtnHeight &&
     mode == 2
   ) {
     return true;
