@@ -1,11 +1,18 @@
 class Gift {
   constructor() {
     console.log("Gifts are preloaded");
-    this.imgWidth = 30;
-    this.imgHeight = 30;
-    this.distanceGift = 0;
+    this.x;
+    this.y;
 
+    this.width = 30;
+    this.height = 30;
+
+    this.distanceGift = 0;
+    this.maxGiftCircleRadius = 120;
     this.velocity = 0;
+    this.acceleration = 0.8;
+
+    this.canDeliverGift = false;
   }
 
   preload() {
@@ -21,23 +28,19 @@ class Gift {
     console.log("drawing gift");
 
     //use Santa as center of the gift circle
+    // by using translate to set santaX & Y as position 0,0
     push();
     translate(santaX + 25, santaY + 13);
-
     this.x = cos(Math.sqrt(3) / 2) * this.distanceGift;
     this.y = sin(1 / 2) * this.distanceGift;
-
-    if (this.isfloating !== false) {
-      this.fallingSpeed = 0;
-    }
 
     //top gift
     image(
       this.gift1,
       0,
       0 - this.distanceGift + 10 + this.fallingSpeed,
-      this.imgWidth,
-      this.imgHeight
+      this.width,
+      this.height
     );
 
     // //right top gift
@@ -45,8 +48,8 @@ class Gift {
       this.gift2,
       this.x,
       -this.y + this.fallingSpeed,
-      this.imgWidth,
-      this.imgHeight
+      this.width,
+      this.height
     );
 
     //left bottom gift
@@ -54,8 +57,8 @@ class Gift {
       this.gift3,
       -this.x,
       -this.y + this.fallingSpeed,
-      this.imgWidth,
-      this.imgHeight
+      this.width,
+      this.height
     );
 
     //right bottom gift
@@ -63,8 +66,8 @@ class Gift {
       this.gift4,
       this.x,
       this.y + this.fallingSpeed,
-      this.imgWidth,
-      this.imgHeight
+      this.width,
+      this.height
     );
 
     //bottom gift
@@ -72,8 +75,8 @@ class Gift {
       this.gift5,
       0,
       0 + this.distanceGift - 10 + this.fallingSpeed,
-      this.imgWidth,
-      this.imgHeight
+      this.width,
+      this.height
     );
 
     //left top gift
@@ -81,23 +84,25 @@ class Gift {
       this.gift6,
       -this.x,
       this.y + this.fallingSpeed,
-      this.imgWidth,
-      this.imgHeight
+      this.width,
+      this.height
     );
 
     this.distanceGift += 2;
 
-    if (this.distanceGift >= 120) {
-      this.distanceGift = 120;
+    if (this.distanceGift >= this.maxGiftCircleRadius) {
+      this.distanceGift = this.maxGiftCircleRadius;
 
-      this.isfloating = false;
-      this.velocity += 0.8;
-
+      this.velocity += this.acceleration;
       this.fallingSpeed += this.velocity;
-      if (this.fallingSpeed > 300) {
-        this.fallingSpeed = 0;
-        this.velocity = 0;
-      }
+    }
+
+    if (this.fallingSpeed > 280) {
+      console.log("fallingSpeed", this.fallingSpeed);
+      this.canDeliverGift = false;
+      this.fallingSpeed = 0;
+      this.distanceGift = 0;
+      this.velocity = 0;
     }
     pop();
   }

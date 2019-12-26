@@ -4,6 +4,8 @@ let canvasWidth = 1000;
 let canvasHeight = 600;
 let mode;
 let song;
+let santaX = 0;
+let santaY = 0;
 
 function preload() {
   console.log("main preloaded");
@@ -22,22 +24,24 @@ function reset() {
   game.birdArr = [];
   game.coinCounter = 0;
   game.totalCoinsCollected = 0;
-  game.gift1.distanceGift = 0;
-  game.gift1.fallingSpeed = 0;
-  game.gift1.velocity = 0;
+  game.gift.distanceGift = 0;
+  game.gift.fallingSpeed = 0;
+  game.gift.velocity = 0;
   game.mission = 0;
+  game.displayCoinNum = 0;
+  game.coinIntervalCanRun = true;
 }
 
 function draw() {
-  if (mode == 0) {
+  if (mode === 0) {
     reset();
-    game.startPage();
+    game.drawStartPage();
   }
-  if (mode == 1) {
-    game.draw();
+  if (mode === 1) {
+    game.drawGamePlaying();
   }
-  if (mode == 2) {
-    game.endGamedraw();
+  if (mode === 2) {
+    game.drawGameOver();
   }
 }
 
@@ -51,28 +55,24 @@ function keyPressed() {
     startMusic();
   }
 
-  console.log("KeyPressed function called");
-  if (keyCode == 32) {
-    game.giftDeliver();
-
-    console.log("keyCode 32 is pressed");
+  if (keyCode === 32) {
+    game.giftDeliverCheck();
   }
 }
 
 function mouseClicked() {
-  if (clickOnButton()) {
+  if (insideRestartButtonArea()) {
     mode = 0;
     song.stop();
-    console.log("mode 0");
   }
 }
 
-function clickOnButton() {
+function insideRestartButtonArea() {
   if (
-    mouseX > 400 &&
-    mouseX < 600 &&
-    mouseY > 280 &&
-    mouseY < 350 &&
+    mouseX > game.restartBtnX &&
+    mouseX < game.restartBtnX + game.restartBtnWidth &&
+    mouseY > game.restartBtnY &&
+    mouseY < game.restartBtnY + game.restartBtnHeight &&
     mode == 2
   ) {
     return true;

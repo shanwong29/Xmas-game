@@ -3,16 +3,23 @@ class Game {
     console.log("Game Constructor");
     this.sky = new Sky();
     this.buildings = new Buildings();
-    this.santaAndDeer = new SantaAndDeer();
+    this.santaAndLeash = new SantaAndLeash();
+    this.deer = new Deer();
     this.scoreBox = new ScoreBox();
-    this.gift1 = new Gift();
+    this.gift = new Gift();
     this.coinArr = [];
     this.birdArr = [];
+    this.requiredCoinsForGiftDeliver = 20;
     this.coinCounter = 0;
     this.totalCoinsCollected = 0;
     this.mission = 0;
-    this.coinDisplay = 0;
-    this.coinDisplayRun = true;
+    this.displayCoinNum = 0;
+    this.coinIntervalCanRun = true;
+
+    this.restartBtnX = 400;
+    this.restartBtnY = 280;
+    this.restartBtnWidth = 200;
+    this.restartBtnHeight = 70;
   }
 
   preload() {
@@ -20,58 +27,97 @@ class Game {
     this.EightBitFont = loadFont("assets/8_bit_madness/8-Bit Madness.ttf");
     this.sky.preload();
     this.buildings.preload();
-    this.santaAndDeer.preload();
+    this.santaAndLeash.preload();
+    this.deer.preload();
     this.scoreBox.preload();
-    this.gift1.preload();
+    this.gift.preload();
   }
 
-  setup() {}
-
-  startPage() {
+  drawBkgAndCharacter() {
     this.sky.draw();
     this.buildings.draw();
+    this.deer.draw();
+    this.santaAndLeash.draw();
+  }
 
-    this.santaAndDeer.draw();
+  drawStartPage() {
+    this.drawBkgAndCharacter();
 
-    // console.log("Santa" + santaX);
+    // draw instruction
     push();
-    fill(255, 255, 255, 200);
-    stroke(0, 0, 0, 200);
+    fill(255, 255, 255, 200); //rect bkg-color : white with tranparency
+    stroke(0, 0, 0, 200); //rect border-color: black
+    strokeWeight(3);
     rect(150, 100, 700, 300, 20);
     pop();
     push();
     textFont(this.EightBitFont);
-    textSize(36);
     textAlign(CENTER, CENTER);
-    stroke(255, 255, 255);
+    textSize(36);
+    stroke(255, 255, 255); //font-border : white
+    strokeWeight(3);
     let instruction =
       "Use the mouse to control the deer, avoid the birds and help Santa to collect coins. Whenever 20 coins are collected, press <SPACEBAR> to help Santa deliver gifts. Press <ENTER> to start.";
     text(instruction, 180, 100, 640, 300);
     pop();
   }
 
-  draw() {
-    //drawing background
-    this.sky.draw();
-    this.buildings.draw();
+  /*****************************************************************************************/
 
-    //drawing player
-    this.santaAndDeer.draw();
+  //check if there are more than this.requiredCoinsForGiftDeliver when spacebar is pressed && if the gifts are at original position
+  //function called by keypress 32, keyPress function in main.js
+  giftDeliverCheck() {
+    console.log("giftDevliverCheck");
+    if (
+      this.coinCounter >= this.requiredCoinsForGiftDeliver &&
+      this.gift.distanceGift === 0
+    ) {
+      this.gift.canDeliverGift = true;
+      this.coinCounter -= this.requiredCoinsForGiftDeliver;
+      this.mission += 1;
+    }
+  }
 
-    //generating & drawing coins, and eliminating coins when it s outside the screen
-    if (frameCount >= 60 && frameCount % 30 == 0) {
+  //collision condition between coins & santa
+  isCollision(coinInstance, santaInstance) {
+    if (
+      coinInstance.x < santaX + santaInstance.santaWidth &&
+      coinInstance.x + coinInstance.width > santaX &&
+      coinInstance.y < santaY + santaInstance.santaHeight &&
+      coinInstance.y + coinInstance.height > santaY
+    ) {
+      return true;
+    }
+  }
+
+  //collision condition between birds & deer
+  isCollisionBird(birdsInstance, deerInstance) {
+    if (
+      birdsInstance.x < deerInstance.x - 7 + deerInstance.width &&
+      birdsInstance.x + birdsInstance.width > deerInstance.x + 27 &&
+      birdsInstance.y < deerInstance.y - 35 + deerInstance.height &&
+      birdsInstance.y + birdsInstance.height > deerInstance.y + 15
+    ) {
+      return true;
+    }
+  }
+
+  // draw game playing scene
+  drawGamePlaying() {
+    this.drawBkgAndCharacter();
+
+    // generating coins
+    if (frameCount >= 60 && frameCount % 30 === 0) {
       this.coinArr.push(new Coin());
     }
+    // drawing coins and eliminating coins when it s outside the screen
     this.coinArr.forEach((currentCoin, index) => {
       currentCoin.draw();
       if (currentCoin.x + currentCoin.width < 0) {
-        console.log("coin gone");
         this.coinArr.splice(index, 1);
-        console.log("coinArr", this.coinArr.length);
       }
-
       //when collision between coins & santa is detected
-      if (this.isCollision(currentCoin, this.santaAndDeer)) {
+      if (this.isCollision(currentCoin, this.santaAndLeash)) {
         console.log("get one pt");
         this.coinCounter += 1;
         this.totalCoinsCollected += 1;
@@ -79,24 +125,21 @@ class Game {
       }
     });
 
-    //generating & drawing birds(obstacle), and eliminating birds when it s outside the screen
-
-    if (frameCount >= 60 && frameCount % 150 == 0) {
+    // generating birds
+    if (frameCount >= 60 && frameCount % 150 === 0) {
       this.birdArr.push(new Bird());
     }
 
+    // drawing birds and eliminating birds when it s outside the screen
     this.birdArr.forEach((currentBird, index) => {
       currentBird.draw();
-      // if (currentBird.x < -currentBird.width) {
+
       if (currentBird.x + currentBird.width < 0) {
-        console.log("bird gone");
         this.birdArr.splice(index, 1);
-        console.log("BirdArr", this.birdArr.length);
       }
 
-      //when collision between coins & santa is detected
-      if (this.isCollisionBird(currentBird, this.santaAndDeer)) {
-        console.log("Game Over");
+      //when collision between coins & deer is detected --> Game Over
+      if (this.isCollisionBird(currentBird, this.deer)) {
         noLoop();
         setTimeout(function() {
           mode = 2;
@@ -110,150 +153,74 @@ class Game {
     push();
     textFont(this.EightBitFont);
     textSize(26);
-    stroke(255, 255, 255);
-    text("Coins : " + this.coinCounter + " / 20", width - 192, 35);
-    text("Mission : " + this.mission, width - 180, 60);
+    stroke(255, 255, 255); //font-edge-color : white
+
+    text(
+      `Coins : ${this.coinCounter} / ${this.requiredCoinsForGiftDeliver}`,
+      canvasWidth - 192,
+      35
+    );
+    text(`Mission : ${this.mission}`, canvasWidth - 180, 60);
     pop();
 
-    // check if game.drop is true
-    // if yes call gift.draw()
-    if (this.drop == true) {
-      this.gift1.draw();
-
-      if (this.gift1.fallingSpeed > 280) {
-        this.drop = false;
-        this.gift1.floating = true;
-        console.log("falling Speed =" + this.gift1.fallingSpeed);
-        console.log("velocity=" + this.gift1.velocity);
-        this.gift1.fallingSpeed = 0;
-        this.gift1.distanceGift = 0;
-        this.gift1.velocity = 0;
-      }
+    // if game.canDeliverGift is true, draw gifts
+    if (this.gift.canDeliverGift === true) {
+      this.gift.draw();
     }
   }
 
-  getTotalCoinsCollected() {
-    return this.totalCoinsCollected;
-  }
-
-  //collision condition between coins & santa
-  isCollision(coins, santa) {
-    if (
-      coins.x < santaX + santa.santaWidth &&
-      coins.x + coins.width > santaX &&
-      coins.y < santaY + santa.santaHeight &&
-      coins.y + coins.height > santaY
-    ) {
-      return true;
-    }
-  }
-
-  //collision condition between birds & deer
-  isCollisionBird(birdsInstance, deerInstance) {
-    if (
-      birdsInstance.x < deerInstance.deerX - 7 + deerInstance.deerWidth &&
-      birdsInstance.x + birdsInstance.width > deerInstance.deerX + 27 &&
-      birdsInstance.y < deerInstance.deerY - 35 + deerInstance.deerHeight &&
-      birdsInstance.y + birdsInstance.height > deerInstance.deerY + 15
-    ) {
-      return true;
-    }
-  }
+  /*************************************************************************************/
 
   //draw game over scene
-  endGamedraw() {
-    this.isInButton = false;
-    this.sky.draw();
-    this.buildings.draw();
-    this.santaAndDeer.draw();
-    push();
-    textFont(this.EightBitFont);
-    textSize(22);
-    textAlign(CENTER, CENTER);
-    stroke(183, 183, 183);
-
+  drawGameOver() {
+    this.drawBkgAndCharacter();
     this.displayFinalResult();
-    pop();
   }
 
   displayIncrement() {
-    this.coinDisplay++;
-    console.log("abc", this.coinDisplay);
+    if (this.totalCoinsCollected > 0) {
+      this.displayCoinNum++;
+    }
 
-    if (this.coinDisplay === this.getTotalCoinsCollected()) {
-      console.log("inside");
-      console.log("function ", this.getTotalCoinsCollected());
-      console.log("coin Disply", this.coinDisplay);
+    if (this.displayCoinNum === this.totalCoinsCollected) {
+      console.log("final Display Coin Num", this.displayCoinNum);
       clearInterval(this.coinsID);
-      this.coinDisplayRun = false;
+      this.coinIntervalCanRun = false;
       this.coinsID = null;
-      // this.coinDisplay = this.getTotalCoinsCollected();
     }
   }
 
   //inside game over scene - final result text & start again button
   displayFinalResult() {
-    if (this.coinDisplayRun == true && !this.coinsID) {
+    if (this.coinIntervalCanRun == true && !this.coinsID) {
       this.coinsID = setInterval(() => this.displayIncrement(), 100);
     }
 
-    // console.log(this.coinDisplay);
-    // if (this.coinDisplayRun) {
-    //   console.log(this.coinDisplayRun);
-    //   this.displayRun();
-    // }
-    // var _this = this;
-    // var coinsID = setInterval(function() {
-    //   _this.coinDisplay++;
-    //   console.log("diplay" + _this.coinDisplay);
-    //   console.log("the number" + _this.getTotalCoinsCollected());
-    //   if (_this.coinDisplay >= _this.getTotalCoinsCollected()) {
-    //     console.log("nside");
-    //     clearInterval(coinsID);
-    //   }
-    // }, 500);
-
-    // const coinsID = setInterval(() => {
-    //   this.coinDisplay++;
-    //   if (this.coinDisplay == this.getTotalCoinsCollected()) {
-    //     console.log("inside");
-    //     console.log("function " + this.getTotalCoinsCollected());
-    //     console.log("coin Disply" + this.coinDisplay);
-    //     clearInterval(coinsID);
-    //   }
-    //   // this.coinDisplay = this.getTotalCoinsCollected();
-    // }, 1000);
-
-    let result = `Wow!  You have collected  ${this.coinDisplay}  coins.\nYou have completed  ${this.mission}  missions.`;
-    fill(38, 43, 61);
+    let result = `Wow!  You have collected  ${this.displayCoinNum}  coins.\nYou have completed  ${this.mission}  missions.`;
 
     push();
+    textFont(this.EightBitFont);
+    textAlign(CENTER, CENTER);
+
+    fill(38, 43, 61); //font-color : navy-blue
+    stroke(183, 183, 183); //font-edge-color : light-gray
+    strokeWeight(3);
     textSize(33);
     text("Merry Christmas!!!", 350, 80, 300, 200);
-    pop();
+    textSize(22);
     text(result, 300, 120, 400, 200);
-    push();
 
-    fill(153, 255, 51);
-    rect(400, 280, 200, 70, 20); //start again button
-    fill(0, 0, 0);
+    fill(153, 255, 51); //restart button bkg-color : green
+    rect(
+      this.restartBtnX,
+      this.restartBtnY,
+      this.restartBtnWidth,
+      this.restartBtnHeight,
+      20
+    ); //restart button
+    fill(0, 0, 0); //restart font-color : black
     textSize(33);
     text("Start Again", 350, 280, 300, 70);
     pop();
-  }
-
-  mousePressed() {
-    mode = 0;
-  }
-
-  //check if there are more than 20 coins when spacebar is pressed
-  giftDeliver() {
-    console.log("giftDevliver");
-    if (this.coinCounter >= 20 && this.gift1.distanceGift == 0) {
-      console.log("this drop is true");
-      this.drop = true;
-      this.coinCounter -= 20;
-      this.mission += 1;
-    }
   }
 }
