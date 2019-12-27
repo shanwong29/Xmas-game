@@ -18,8 +18,10 @@ If you use Visual Studio Code, there is an extention called [Live Server](https:
 Alternatively, you can set up the local server according to the [instruction from p5.js](https://github.com/processing/p5.js/wiki/Local-server)
 
 ## Built with
-JavaScript
-[p5.js](https://p5js.org/)
+* JavaScript
+
+
+* [p5.js](https://p5js.org/)
 
 ## Acknowledgments
 Special thanks to my teacher Montasar, all the teaching assistants, and all the following artists for their amazing work:
