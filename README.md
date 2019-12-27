@@ -15,7 +15,7 @@ Since there are preloaded image and sound files in the project, a local server i
 If you use Visual Studio Code, there is an extention called [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) which does the setup of the local server for you.
 
 
-Alternatively, you can set up the local server according to the [instruction from p5.js](https://github.com/processing/p5.js/wiki/Local-server)
+Alternatively, you can set up the local server by following the [instruction from p5.js](https://github.com/processing/p5.js/wiki/Local-server)
 
 ## Built with
 * JavaScript
