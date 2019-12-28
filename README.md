@@ -27,3 +27,4 @@ Alternatively, you can set up the local server by following the [instruction fro
 Special thanks to my teacher Montasar, all the teaching assistants, and all the following artists for their amazing work:
 * santa and deer - Illustration 33572198 © Christos Georghiou - Dreamstime.com
 * coins - Illustration 1095396236 © MicroOne - shutterstock.com
+* gifts - Illustrated and permitted by [Shona Dutta](https://dribbble.com/shonachica)
