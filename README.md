@@ -28,3 +28,4 @@ Special thanks to my teacher Montasar, all the teaching assistants, and all the 
 * santa and deer - Illustration 33572198 © Christos Georghiou - Dreamstime.com
 * coins - Illustration 1095396236 © MicroOne - shutterstock.com
 * gifts - Illustrated by [Shona Dutta](https://dribbble.com/shonachica)
+* background - Illustrated by [Ariana](https://dribbble.com/aristravelsphere)
