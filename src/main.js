@@ -25,6 +25,7 @@ function reset() {
   game.gift.giftDistance = 0;
   game.gift.fallingSpeed = 0;
   game.gift.velocity = 0;
+  game.gift.canDeliverGift = false;
 
   game.coinCounter = 0;
   game.totalCoinsCollected = 0;
