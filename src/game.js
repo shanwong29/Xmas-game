@@ -22,7 +22,6 @@ class Game {
   }
 
   preload() {
-    console.log("game is preloaded");
     this.sky.preload();
     this.buildings.preload();
     this.santaAndLeash.preload();

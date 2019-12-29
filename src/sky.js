@@ -5,7 +5,6 @@ class Sky {
   }
 
   preload() {
-    console.log("Sky is preloaded");
     this.sky = loadImage("assets/bkg_no_buildings_1000_600.jpg");
   }
 

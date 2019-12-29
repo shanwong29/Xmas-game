@@ -12,7 +12,6 @@ class Deer {
   }
 
   preload() {
-    console.log("Deer is preloaded");
     this.deer = loadImage("assets/deer_551_422.png");
   }
 

@@ -17,10 +17,6 @@ class Coin {
     this.imgArr.push(loadImage("assets/Coin6_238_238.png"));
   }
 
-  preload() {
-    console.log("coins are preload");
-  }
-
   draw() {
     if (frameCount % 5 === 0) {
       this.imgCounter++;

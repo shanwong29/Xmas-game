@@ -16,9 +16,6 @@ class Bird {
     this.imgArr.push(loadImage("assets/stork-flow(5).png"));
   }
 
-  preload() {
-    console.log("bird is preloaded");
-  }
   draw() {
     if (frameCount % 10 == 0) {
       this.imgCounter++;

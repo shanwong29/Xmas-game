@@ -9,7 +9,6 @@ let santaX = 0;
 let santaY = 0;
 
 function preload() {
-  console.log("main preloaded");
   game.preload();
   song = loadSound("assets/Minecraft_Soundtrack_Calm3.mp3");
 }
@@ -80,6 +79,7 @@ function insideRestartButtonArea() {
     mouseY < game.messages.restartBtnY + game.messages.restartBtnHeight &&
     mode == 2
   ) {
+    console.log("Start again");
     return true;
   }
 }

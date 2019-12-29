@@ -16,7 +16,6 @@ class Gift {
   }
 
   preload() {
-    console.log("Gifts are preloaded");
     this.gift1 = loadImage("assets/gift_red_104_109.png");
     this.gift2 = loadImage("assets/gift_blue_104_109.png");
     this.gift3 = loadImage("assets/gift_yellow_104_109.png");

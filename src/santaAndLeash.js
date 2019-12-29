@@ -17,7 +17,6 @@ class SantaAndLeash {
   }
 
   preload() {
-    console.log("Santa & Leash are preloaded");
     this.santa = loadImage("assets/SantaClaus_606_401.png");
   }
 

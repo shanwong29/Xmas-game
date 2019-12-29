@@ -6,7 +6,6 @@ class Buildings {
   }
 
   preload() {
-    console.log("Buildings are preloaded");
     this.buildings = loadImage("assets/building_1000_181.png");
   }
 
