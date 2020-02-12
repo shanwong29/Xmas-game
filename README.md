@@ -5,13 +5,12 @@ This is my first project from the Ironhack coding bootcamp. It is a christmas th
 
 The goal of this project is to practice JavaScript syntax and Object-oriented programming (OOP).
 
+You can play the game on my deployment page: [X'mas Game](https://shanwong29.github.io/Xmas-game/).
+
 ## Run Locally
 
 <!-- Since there are preloaded image and sound files in the project, a local server is needed to run the html file.
-
 If you use Visual Studio Code, there is an extention called [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) which does the setup of the local server for you.
-
-
 Alternatively, you can set up the local server by following the [instruction from p5.js](https://github.com/processing/p5.js/wiki/Local-server)-->
 
 1. Clone the repository
@@ -31,7 +30,7 @@ docker build -t xmas-game:latest .
 docker run -p 8080:80 -d xmas-game:latest
 ```
 
-You can then run the game locally on http://localhost:8080/.
+4. You can then run the game locally on http://localhost:8080/
 
 ## Built with
 
