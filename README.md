@@ -1,6 +1,6 @@
 # X'mas Game
 
-![Photo Gallery App Demo](/assets/xmas-game-demo.png)
+![Photo Gallery App Demo](/assets/xmas-game-demo.jpg)
 This is my first project from the Ironhack coding bootcamp. It is a christmas themed run-and-jump game.
 
 The goal of this project is to practice JavaScript syntax and Object-oriented programming (OOP).
